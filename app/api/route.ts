@@ -73,3 +73,9 @@ export async function POST(request: Request) {
     return Response.json('Error uploading file', { status: 500 });
   }
 }
+
+export function GET(req: Request) {
+  return Response.json({
+    hi: 123
+  })
+}
