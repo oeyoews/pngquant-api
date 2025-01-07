@@ -68,7 +68,7 @@ export async function handleFileConversion(path) {
  * @param {string} filename - The name of the file.
  * @returns {Promise<{filename: string, data: {base64Image: string, newsize: string}} | Error>}
  */
-export function processCompression(child, compressedFilepath, filePath, filename) {
+export function processCompression(child, compressedFilepath, filePath, filename, oldfilesize) {
   return new Promise((resolve, reject) => {
     child.on('close', async () => {
       try {
@@ -86,7 +86,10 @@ export function processCompression(child, compressedFilepath, filePath, filename
         // 返回数据
         resolve({
           filename,
-          data: filedata,
+          data: {
+            ...filedata, // 原始文件数据
+            oldfilesize
+          },
         });
       } catch (error) {
         console.error('Error during compression process:', error);
