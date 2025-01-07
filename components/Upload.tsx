@@ -52,7 +52,7 @@ const ImageCompressor = () => {
       },
       error: (error) => {
         // handleError(error);
-        return `压缩失败:${error}`;
+        return error
       },
     });
   };
