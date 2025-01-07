@@ -19,6 +19,7 @@ export async function POST(
     // TODO: 不支持中文文件名上传
     const formData = await request.formData();
     const file = formData.get('file')!; // 获取文件
+    const oldfilesize = countFilesize(file.size);
 
     if (!file || typeof file === 'string') {
       return Response.json({
@@ -59,11 +60,10 @@ export async function POST(
 
     // 文件写入
     await writeFile(filePath, buffer);
-    let filedata;
     // 图片压缩
     const child = spawn(pngquant, ['-o', compressedFilepath, filePath]);
     // 处理返回数据
-    const data = await processCompression(child, compressedFilepath, filePath, filename)
+    const data = await processCompression(child, compressedFilepath, filePath, filename, oldfilesize)
     return Response.json(data);
   } catch (error) {
     console.error('Error uploading file:', error);
