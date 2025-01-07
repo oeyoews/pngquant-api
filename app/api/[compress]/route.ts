@@ -64,7 +64,7 @@ export async function POST(
     // 文件写入
     await writeFile(filePath, buffer);
     // 图片压缩
-    const child = spawn(pngquant, ['-o', compressedFilepath, filePath]);
+    const child = spawn(pngquant, ['--skip-if-larger', '-o', compressedFilepath, filePath]);
     // 处理返回数据
     const data = await processCompression(child, compressedFilepath, filePath, filename, oldfilesize)
     return Response.json(data);

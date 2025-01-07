@@ -49,7 +49,7 @@ export async function handleFileConversion(path) {
   } catch (error) {
     if (!fs.existsSync(path)) {
       return {
-        message: "压缩文件不存在",
+        message: "压缩文件不存在或者此图片已经被压缩过",
       }
     }
     console.error('Error handling file:', error);

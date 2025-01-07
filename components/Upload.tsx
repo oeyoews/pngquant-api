@@ -31,7 +31,9 @@ const ImageCompressor = () => {
     : 0;
 
   const beforeUpload = async (file) => {
+    // debugger
     if (!file) return;
+
     // setOriginalSize(file.size / 1024)); // KB
 
     const formData = new FormData();
@@ -45,18 +47,21 @@ const ImageCompressor = () => {
       loading: '图片压缩中...',
       success: async (res) => {
         const data = await res.json()
-        console.log("", data);
         handleSuccess(data);
         return `图片压缩成功`;
       },
       error: (error) => {
-        handleError(error);
+        // handleError(error);
         return `压缩失败:${error.message}`;
       },
     });
   };
 
   const handleSuccess = (res: ImageRes) => {
+    if(res.data.message) {
+      toast.warning(res.data.message);
+      return
+    }
     setOriginalSize(res.data?.oldfilesize);
     setNewSize(res.data.newsize);
     setImageSrc(res.data.base64Image);
