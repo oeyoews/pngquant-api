@@ -3,14 +3,17 @@ import path from 'path';
 import fs from 'fs';
 import os from 'os';
 import { spawn } from 'child_process';
-import  pngquant from 'pngquant-bin';
+import pngquant from 'pngquant-bin';
 
 import { writeFile } from 'fs/promises';
-import { countFilesize, generateNewFilename } from '@/utils/index';
+import { checkDir, countFilesize, generateNewFilename, handleFileConversion, processCompression } from '@/utils/index';
 
 const MAXSIZE = 1024 * 3;
 
-export async function POST(request: Request,  { params }: { params: Promise<{ compress: string }> }) {
+export async function POST(
+  request: Request,
+  { params }: { params: Promise<{ compress: string }> }
+) {
   try {
     // 获取表单数据
     // TODO: 不支持中文文件名上传
@@ -18,7 +21,10 @@ export async function POST(request: Request,  { params }: { params: Promise<{ co
     const file = formData.get('file')!; // 获取文件
 
     if (!file || typeof file === 'string') {
-      return new Response('No file uploaded', { status: 400 });
+      return Response.json({
+        message: 'No file uploaded',
+        code: 400,
+      });
     }
 
     // 文件大小限制
@@ -49,25 +55,16 @@ export async function POST(request: Request,  { params }: { params: Promise<{ co
     const uploadDir = os.tmpdir();
     // checkDir(uploadDir);
     const filePath = path.join(uploadDir, filename);
+    const compressedFilepath = path.join(uploadDir, 'fs8-' + filename);
 
+    // 文件写入
     await writeFile(filePath, buffer);
-	const child = spawn(pngquant, ['-o', 'test-fs8.png', filePath])
-	  child.on('close', () => {
-		console.log("'成功");
-	})
-
-    setTimeout(() => {
-      fs.rm(filePath, () => {
-        console.log('自动清理上传的临时图片文件', filePath);
-      });
-    }, 1500);
-
-    console.log('File saved to', filePath);
-
-    return Response.json({
-      filename,
-      filepath: filePath,
-    });
+    let filedata;
+    // 图片压缩
+    const child = spawn(pngquant, ['-o', compressedFilepath, filePath]);
+    // 处理返回数据
+    const data = await processCompression(child, compressedFilepath, filePath, filename)
+    return Response.json(data);
   } catch (error) {
     console.error('Error uploading file:', error);
     return Response.json('Error uploading file', { status: 500 });
@@ -76,6 +73,7 @@ export async function POST(request: Request,  { params }: { params: Promise<{ co
 
 export function GET(req: Request) {
   return Response.json({
-    hi: 123
-  })
+    message: '在线PNG压缩图片API, powered by @oeyoews',
+    code: 200,
+  });
 }
