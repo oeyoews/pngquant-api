@@ -10,7 +10,7 @@ import { countFilesize, generateNewFilename } from '@/utils/index';
 
 const MAXSIZE = 1024 * 3;
 
-export async function POST(request: Request) {
+export async function POST(request: Request,  { params }: { params: Promise<{ compress: string }> }) {
   try {
     // 获取表单数据
     // TODO: 不支持中文文件名上传
