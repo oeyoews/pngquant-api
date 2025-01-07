@@ -105,7 +105,7 @@ const ImageCompressor = () => {
     <div className="mt-5">
       <h2 className="text-center text-lg font-bold">在线图片压缩</h2>
 
-      <div className="w-full max-w-md mx-auto mt-4 border border-dashed border-gray-300 p-4 rounded-lg">
+      <div className="w-full min-w-[250px] max-w-md mx-auto mt-4 border border-dashed border-gray-300 p-4 rounded-lg">
         <input
           type="file"
           accept=".png"
