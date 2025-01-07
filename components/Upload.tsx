@@ -52,15 +52,15 @@ const ImageCompressor = () => {
       },
       error: (error) => {
         // handleError(error);
-        return `压缩失败:${error.message}`;
+        return `压缩失败:${error}`;
       },
     });
   };
 
   const handleSuccess = (res: ImageRes) => {
     if(res.data.message) {
-      // toast.warning(res.data.message);
-      // return
+      toast.warning(res.data.message);
+      return
     }
     setOriginalSize(res.data?.oldfilesize);
     setNewSize(res.data.newsize);
