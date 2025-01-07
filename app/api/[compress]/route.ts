@@ -16,7 +16,10 @@ export async function POST(
 ) {
   try {
     // 获取表单数据
-    // TODO: 不支持中文文件名上传
+    // TODO: 不支持中文文件名上传 ???
+    // TODO: larger skip
+    // add 通知组件
+    // 限制api访问
     const formData = await request.formData();
     const file = formData.get('file')!; // 获取文件
     const oldfilesize = countFilesize(file.size);

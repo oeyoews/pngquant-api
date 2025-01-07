@@ -1,3 +1,5 @@
+import { toast } from 'sonner';
+
 /**
  * 将 base64 字符串转换为 Blob 对象
  * @param {string} base64 - base64 字符串
@@ -24,7 +26,7 @@ export const base64ToBlob = (base64: string, mimeType = '') => {
  */
 export const handleImageCopy = async (src: string) => {
   if (!src) {
-    console.error("图片不存在");
+    toast.error("图片不存在");
     return;
   }
   try {
@@ -35,9 +37,8 @@ export const handleImageCopy = async (src: string) => {
       ),
     });
     await navigator.clipboard.write([clipboardItem]);
-    // ElNotification({ type: 'success', message: '图片已复制到剪贴板' });
+    toast.success("图片已复制到剪贴板");
   } catch (error) {
-    console.error('复制失败:', error);
-    // ElNotification({ type: 'error', message: '复制失败，请重试' });
+    toast.error("复制失败，请重试");
   }
 };

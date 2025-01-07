@@ -1,7 +1,10 @@
 // @ts-nocheck
 'use client'
+
+import { toast } from 'sonner';
 import { handleImageCopy } from '@/utils/CopyImage';
-import React, { useState, useEffect, useRef, use } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Toaster } from 'sonner';
 
 interface ImageRes {
   data: {
@@ -33,38 +36,35 @@ const ImageCompressor = () => {
 
     const formData = new FormData();
     formData.append('file', file);
+    const promise = fetch('/api/compress', {
+      method: 'POST',
+      body: formData,
+    });
 
-    try {
-      const response = await fetch('/api/compress', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        handleSuccess(result);
-      } else {
-        handleError();
-      }
-    } catch (error) {
-      console.error('上传失败:', error);
-      handleError();
-    }
+    toast.promise(promise, {
+      loading: '图片压缩中...',
+      success: async (res) => {
+        const data = await res.json()
+        console.log("", data);
+        handleSuccess(data);
+        return `图片压缩成功`;
+      },
+      error: (error) => {
+        handleError(error);
+        return `压缩失败:${error.message}`;
+      },
+    });
   };
 
   const handleSuccess = (res: ImageRes) => {
-    if (res.status === 500) {
-      alert(res.message);
-      return;
-    }
-      setOriginalSize(res.data.oldfilesize);
-      setNewSize(res.data.newsize);
-      setImageSrc(res.data.base64Image);
-      setOriginalName(res.filename);
+    setOriginalSize(res.data?.oldfilesize);
+    setNewSize(res.data.newsize);
+    setImageSrc(res.data.base64Image);
+    setOriginalName(res.filename);
   };
 
   const handleError = () => {
-    alert('上传失败，请重试');
+    toast.error("图片压缩失败");
   };
 
   const handlePaste = async (event) => {
@@ -163,6 +163,7 @@ const ImageCompressor = () => {
           </div>
         </div>
       )}
+      <Toaster />
     </div>
   );
 };
