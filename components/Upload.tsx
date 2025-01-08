@@ -30,9 +30,15 @@ const ImageCompressor = () => {
     ? (originalSize - newSize).toFixed(2)
     : 0;
 
-  const beforeUpload = async (file) => {
+  const beforeUpload = async (file: File) => {
     // debugger
     if (!file) return;
+
+    // accept ios 无效
+    if(file.type !== 'image/png') {
+      toast('请上传PNG图片');
+      return;
+    }
 
     // setOriginalSize(file.size / 1024)); // KB
 
@@ -52,7 +58,7 @@ const ImageCompressor = () => {
       },
       error: (error) => {
         // handleError(error);
-        return error
+        return "图片压缩失败 " + error;
       },
     });
   };

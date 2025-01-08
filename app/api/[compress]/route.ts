@@ -37,7 +37,7 @@ export async function POST(
           countFilesize(file.size) +
           'kb' +
           ',请上传小于 3M 的图片',
-        code: 500,
+        code: 400,
       });
     }
 
@@ -45,7 +45,7 @@ export async function POST(
     if (file.type !== 'image/png') {
       return Response.json({
         message: '请上传PNG图片',
-        code: 500,
+        code: 400,
       });
     }
 
