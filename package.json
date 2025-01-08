@@ -13,6 +13,7 @@
     "pngquant-bin": "^9.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-medium-image-zoom": "^5.2.13",
     "sonner": "^1.7.1"
   },
   "devDependencies": {

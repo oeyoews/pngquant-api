@@ -5,6 +5,8 @@ import { toast } from 'sonner';
 import { handleImageCopy } from '@/utils/CopyImage';
 import React, { useState, useEffect, useRef } from 'react';
 import { Toaster } from 'sonner';
+import Zoom from 'react-medium-image-zoom'
+import 'react-medium-image-zoom/dist/styles.css'
 
 interface ImageRes {
   data: {
@@ -149,11 +151,13 @@ const ImageCompressor = () => {
 
       {imageSrc && (
         <div className="text-center mt-4">
+          <Zoom>
           <img
             src={imageSrc}
             alt="压缩结果"
             className="rounded-lg max-h-80 mx-auto"
           />
+          </Zoom>
           <div className="mt-4">
             <button
               className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
