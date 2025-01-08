@@ -36,7 +36,7 @@ const ImageCompressor = () => {
 
     // accept ios 无效
     if(file.type !== 'image/png') {
-      toast('请上传PNG图片');
+      toast.warning('请上传PNG图片');
       return;
     }
 
@@ -120,6 +120,7 @@ const ImageCompressor = () => {
           onChange={(e) => beforeUpload(e.target.files[0])}
         />
 
+        {/* TODO: 上传中禁止继续上传 */}
         <div
           className="flex flex-col items-center cursor-pointer"
           onClick={() => uploadRef.current.click()}
