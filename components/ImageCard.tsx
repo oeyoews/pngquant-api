@@ -28,7 +28,6 @@ const ImageCard = () => {
   const beforeUpload = async (file: File) => {
     if (!file) return;
     updateCanvas(file);
-    setImageSrc(URL.createObjectURL(file));
     setOriginalName(file.name);
   };
 
@@ -40,7 +39,7 @@ const ImageCard = () => {
 
         const formData = new FormData();
         formData.append('file', file);
-        // setImageSrc(file.name);
+        updateCanvas(file);
       }
     }
   };
@@ -87,6 +86,7 @@ const ImageCard = () => {
         </div>
       </div>
 
+      <canvas ref={canvasRef} hidden/>
       {imageSrc && (
         <div className="text-center mt-4 mx-auto">
           <Zoom>
@@ -95,7 +95,6 @@ const ImageCard = () => {
               alt=""
               className="rounded-lg max-h-80 mx-auto"
             />
-              <canvas ref={canvasRef} hidden/>
           </Zoom>
           <div className="mt-4">
             <button

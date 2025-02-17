@@ -13,6 +13,7 @@ export function processImage(
   option = { padding: 80, radius: 40, colors: ['#ff6b6b', '#4ecdc4'] },
 ) {
   return new Promise((resolve, reject) => {
+  if(!canvas) reject('canvas is null')
     const ctx = canvas.getContext('2d');
     const { padding, radius, colors } = option;
 
