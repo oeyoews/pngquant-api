@@ -7,6 +7,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Toaster } from 'sonner';
 import Zoom from 'react-medium-image-zoom'
 import 'react-medium-image-zoom/dist/styles.css'
+import { useRouter } from 'next/navigation'
 
 interface ImageRes {
   data: {
@@ -18,6 +19,7 @@ interface ImageRes {
 }
 
 const ImageCompressor = () => {
+    const router = useRouter();
   const [originalSize, setOriginalSize] = useState(null);
   const [newSize, setNewSize] = useState(null);
   const [imageSrc, setImageSrc] = useState(null);
@@ -32,13 +34,16 @@ const ImageCompressor = () => {
     ? (originalSize - newSize).toFixed(2)
     : 0;
 
+  const goCard = () => {
+    router.push('/card')
+  }
   const beforeUpload = async (file: File) => {
     // debugger
     if (!file) return;
 
     // accept ios 无效
     if(file.type !== 'image/png') {
-      toast.warning('请上传PNG图片');
+      toast.warning('请上传 PNG 图片');
       return;
     }
 
@@ -111,7 +116,7 @@ const ImageCompressor = () => {
 
   return (
     <div className="mt-5">
-      <h2 className="text-center text-lg font-bold">在线图片压缩</h2>
+      <h2 className="text-center text-lg font-bold" onClick={goCard}>在线图片压缩</h2>
 
       <div className="w-full min-w-[250px] max-w-md mx-auto mt-4 border border-dashed border-gray-300 p-4 rounded-lg">
         <input
@@ -145,7 +150,7 @@ const ImageCompressor = () => {
 
       {originalSize && newSize && (
         <div className="text-center mt-4 text-sm text-gray-500">
-          大小: {originalSize} KB → {newSize} KB | 压缩率为: {compressionRate}% | 压缩大小: {sizeReduced} KB
+          大小：{originalSize} KB → {newSize} KB | 压缩率为：{compressionRate}% | 压缩大小：{sizeReduced} KB
         </div>
       )}
 
