@@ -13,10 +13,23 @@ const ImageCard = () => {
   const [imageSrc, setImageSrc] = useState(null);
   const [originalName, setOriginalName] = useState(`${Date.now()}图片.png`);
   const uploadRef = useRef(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const updateCanvas = async (file) => {
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const base64 = e.target.result;
+      const newBase64 = await processImage(canvasRef.current, base64);
+      setImageSrc(newBase64);
+    }
+    reader.readAsDataURL(file);
+  }
 
   const beforeUpload = async (file: File) => {
     if (!file) return;
-    // setImageSrc(file.name);
+    updateCanvas(file);
+    setImageSrc(URL.createObjectURL(file));
+    setOriginalName(file.name);
   };
 
   const handlePaste = async (event) => {
@@ -32,7 +45,9 @@ const ImageCard = () => {
     }
   };
 
+  const [canvasWidth, setCanvasWidth] = useState()
   useEffect(() => {
+    setCanvasWidth(window.innerWidth * 0.7)
     window.addEventListener('paste', handlePaste);
     return () => {
       window.removeEventListener('paste', handlePaste);
@@ -73,13 +88,14 @@ const ImageCard = () => {
       </div>
 
       {imageSrc && (
-        <div className="text-center mt-4">
+        <div className="text-center mt-4 mx-auto">
           <Zoom>
-          <img
-            src={imageSrc}
-            alt=""
-            className="rounded-lg max-h-80 mx-auto"
-          />
+            <img
+              src={imageSrc}
+              alt=""
+              className="rounded-lg max-h-80 mx-auto"
+            />
+              <canvas ref={canvasRef} hidden/>
           </Zoom>
           <div className="mt-4">
             <button
